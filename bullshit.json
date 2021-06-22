@@ -1,0 +1,2784 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Insis REST API: People Directory Services",
+    "version": "11.3.0.0"
+  },
+  "servers": [
+    {
+      "url": "/people-dir"
+    }
+  ],
+  "paths": {
+    "/people-dir/endpoints": {
+      "get": {
+        "operationId": "getEndpoints",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RESTEndpoint"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "updateJaznData",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/composite": {
+      "get": {
+        "tags": [
+          "Person composite services. Provides access to the Insis People module"
+        ],
+        "summary": "Returns person data identified by pid or manId.",
+        "operationId": "getPersonComposite",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "query",
+            "description": "MAN ID",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "pid",
+            "in": "query",
+            "description": "PID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manComp",
+            "in": "query",
+            "description": "Man or Company identifier. If null the value is set to 1 (Man).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPeopleComplex"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Person composite services. Provides access to the Insis People module"
+        ],
+        "summary": "Update composite person data",
+        "operationId": "updatePersonComposite",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "strict",
+            "in": "query",
+            "description": "Strict update - true or false. If true the service will attempt to recreate the structure from the request exact the same way to the database including the null fields. The existing mapped entities (except bank accounts) not presented in the service request will be deleted. If false the non null fields will be skipped and only the fields with values will be taken in account. The manId of the current person will be set automatically to part1Id in relations1 and to part2Id in relations2.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Person object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/PPeopleComplex"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPeopleComplex"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Person composite services. Provides access to the Insis People module"
+        ],
+        "summary": "Insert composite person data",
+        "operationId": "insertPersonComposite",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Person object",
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/PPeopleComplex"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPeopleComplex"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/{manId}/addresses": {
+      "get": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Returns all person addresses. Person is identified by primary key manId.\n If query parameter 'type' is specified, service will return all person addresses\n of specific type. Possible values for address type can be seen using service GET/common/lov/address-types",
+        "description": "Mandatory path parameter: BigDecimal manId; Optional query parameter: String type ",
+        "operationId": "getPersonAddresses",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PAddress"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Create new address for a person identified by primary key manId",
+        "description": "Mandatory path parameter: BigDecimal manId and object PAddress address",
+        "operationId": "addAddress",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PAddress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PAddress"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/{manId}/contacts": {
+      "get": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Returns all person contacts. Person is identified by primary key manId.\n If query parameter 'type' is specified, service will return all person contacts\n of specific type. Possible values for contact type can be seen using service GET/common/lov/people-contact-types",
+        "description": "Mandatory path parameter: BigDecimal manId; Optional query parameter: String type ",
+        "operationId": "getPersonContacts",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PContacts"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Create new contact for a person identified by primary key manId",
+        "description": "Mandatory path parameter: BigDecimal manId and object PContacts contact",
+        "operationId": "addContact",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PContacts"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PContacts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/{manId}/addresses/{addressId}": {
+      "get": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Retrieve person address by manId and addressId",
+        "description": "Mandatory path parameters: BigDecimal manId and Long addressId",
+        "operationId": "getPersonAddressByAddressId",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PAddress"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Update person address by addressId",
+        "description": "Mandatory path parameters: BigDecimal manId and Long addressId",
+        "operationId": "updateAddress",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/PAddress"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PAddress"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Delete person address by addressId ",
+        "description": "Mandatory path parameters: BigDecimal manId and Long addressId",
+        "operationId": "deleteAddress",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/{manId}/contacts/{contactId}": {
+      "get": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Retrieve person contact by manId and contactId",
+        "description": "Mandatory path parameters: BigDecimal manId and Long contactId",
+        "operationId": "getPersonContactByContactId",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PContacts"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Update person contact by contactId",
+        "description": "Mandatory path parameters: BigDecimal manId and Long contactId",
+        "operationId": "updateContact",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/PContacts"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PContacts"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Delete person contact by contactId ",
+        "description": "Mandatory path parameters: BigDecimal manId and Long contactId",
+        "operationId": "deleteContact",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "contactId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/{manId}": {
+      "get": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Returns person data identified by primary key manId",
+        "description": "Mandatory path parameters: BigDecimal manId",
+        "operationId": "getPersonById",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPeople"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Update person identified by primary key manId",
+        "description": "Mandatory parameters: path parameter BigDecimal manId and PPeople object",
+        "operationId": "updatePerson",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PPeople"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPeople"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person": {
+      "get": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Search people by basic person criteria (only direct person properties).Response is instance of PaginatedQueryRs, where Object[]{} is of type PPeople.class. Using filter param is mandatory",
+        "description": "Query parameters: egn,\nmanComp,\nname,\ngname,\nsname,\nfname,\nbirthDate (YYYY-MM-DD),\nsex,\nnotes,\nnamePrefix,\nnameSuffix,\nnationality,\nhomeCountry,\nlanguage,\nclassCode,\nclassSubCode,\ncompType,\ndataSource,\nfiscalPeriod,\nindustryCode,\nsubIndustryCode,\nregistrationDate (YYYY-MM-DD'T'HH24:MI:SS.TZH:TZM),\nattr1,\nattr2,\nattr3,\nattr4,\nattr5",
+        "operationId": "getPeople",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedQueryRs"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Create new person",
+        "description": "Mandatory parameters: PPeople object",
+        "operationId": "addPerson",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PPeople"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPeople"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/validate": {
+      "post": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Validate person data",
+        "description": "Mandatory parameters: PPeople object",
+        "operationId": "validatePerson",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PPeople"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PPeople"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people-dir/person/search": {
+      "get": {
+        "tags": [
+          "People services. Provides access to the Insis People module"
+        ],
+        "summary": "Search for people or companies",
+        "description": "Service allows pagination of result set. Query parameters are used for filtering. When no query parameter values have been provided, all records will be returned.",
+        "operationId": "searchPeople",
+        "parameters": [
+          {
+            "name": "Transaction-ID",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Monitor",
+            "in": "header",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "operational-mode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pid",
+            "in": "query",
+            "description": "Identifier of person or company",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Name of person or company",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Preferred e-mail",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phone",
+            "in": "query",
+            "description": "Preferred phone",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "validityDate",
+            "in": "query",
+            "description": "Person or company validity date (yyyy-MM-dd)",
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          },
+          {
+            "name": "conjunction",
+            "in": "query",
+            "description": "Condition AND/OR for applying filtering criteria (by default is OR)",
+            "schema": {
+              "pattern": "AND|OR",
+              "type": "string",
+              "default": "OR"
+            }
+          },
+          {
+            "name": "resultSetId",
+            "in": "query",
+            "description": "ID of cached result set from which to read rows in consecutive calls",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startRow",
+            "in": "query",
+            "description": "The sequence number of the first row to be returned in the response result set",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "rowCount",
+            "in": "query",
+            "description": "Number of rows after 'startRow' to be returned in the result set. If not specified, all remaining rows will be returned.",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchPeople"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Attr": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "schemaTypeInfo": {
+            "$ref": "#/components/schemas/TypeInfo"
+          },
+          "specified": {
+            "type": "boolean"
+          },
+          "ownerElement": {
+            "$ref": "#/components/schemas/Element"
+          },
+          "id": {
+            "type": "boolean"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NamedNodeMap"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "nodeName": {
+            "type": "string"
+          },
+          "nodeValue": {
+            "type": "string"
+          },
+          "nodeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parentNode": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "childNodes": {
+            "$ref": "#/components/schemas/NodeList"
+          },
+          "firstChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "lastChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "previousSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "nextSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "ownerDocument": {
+            "$ref": "#/components/schemas/Document"
+          },
+          "namespaceURI": {
+            "type": "string"
+          },
+          "localName": {
+            "type": "string"
+          },
+          "baseURI": {
+            "type": "string"
+          },
+          "textContent": {
+            "type": "string"
+          }
+        }
+      },
+      "Configuration": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/Configuration"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "DOMConfiguration": {
+        "type": "object",
+        "properties": {
+          "parameterNames": {
+            "$ref": "#/components/schemas/DOMStringList"
+          }
+        }
+      },
+      "DOMImplementation": {
+        "type": "object"
+      },
+      "DOMStringList": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Document": {
+        "type": "object",
+        "properties": {
+          "doctype": {
+            "$ref": "#/components/schemas/DocumentType"
+          },
+          "implementation": {
+            "$ref": "#/components/schemas/DOMImplementation"
+          },
+          "documentElement": {
+            "$ref": "#/components/schemas/Element"
+          },
+          "inputEncoding": {
+            "type": "string"
+          },
+          "xmlEncoding": {
+            "type": "string"
+          },
+          "xmlStandalone": {
+            "type": "boolean"
+          },
+          "xmlVersion": {
+            "type": "string"
+          },
+          "strictErrorChecking": {
+            "type": "boolean"
+          },
+          "documentURI": {
+            "type": "string"
+          },
+          "domConfig": {
+            "$ref": "#/components/schemas/DOMConfiguration"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NamedNodeMap"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "nodeName": {
+            "type": "string"
+          },
+          "nodeValue": {
+            "type": "string"
+          },
+          "nodeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parentNode": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "childNodes": {
+            "$ref": "#/components/schemas/NodeList"
+          },
+          "firstChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "lastChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "previousSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "nextSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "ownerDocument": {
+            "$ref": "#/components/schemas/Document"
+          },
+          "namespaceURI": {
+            "type": "string"
+          },
+          "localName": {
+            "type": "string"
+          },
+          "baseURI": {
+            "type": "string"
+          },
+          "textContent": {
+            "type": "string"
+          }
+        }
+      },
+      "DocumentType": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "internalSubset": {
+            "type": "string"
+          },
+          "systemId": {
+            "type": "string"
+          },
+          "publicId": {
+            "type": "string"
+          },
+          "entities": {
+            "$ref": "#/components/schemas/NamedNodeMap"
+          },
+          "notations": {
+            "$ref": "#/components/schemas/NamedNodeMap"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NamedNodeMap"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "nodeName": {
+            "type": "string"
+          },
+          "nodeValue": {
+            "type": "string"
+          },
+          "nodeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parentNode": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "childNodes": {
+            "$ref": "#/components/schemas/NodeList"
+          },
+          "firstChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "lastChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "previousSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "nextSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "ownerDocument": {
+            "$ref": "#/components/schemas/Document"
+          },
+          "namespaceURI": {
+            "type": "string"
+          },
+          "localName": {
+            "type": "string"
+          },
+          "baseURI": {
+            "type": "string"
+          },
+          "textContent": {
+            "type": "string"
+          }
+        }
+      },
+      "Element": {
+        "type": "object",
+        "properties": {
+          "tagName": {
+            "type": "string"
+          },
+          "attributeNode": {
+            "$ref": "#/components/schemas/Attr"
+          },
+          "attributeNodeNS": {
+            "$ref": "#/components/schemas/Attr"
+          },
+          "schemaTypeInfo": {
+            "$ref": "#/components/schemas/TypeInfo"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/NamedNodeMap"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "nodeName": {
+            "type": "string"
+          },
+          "nodeValue": {
+            "type": "string"
+          },
+          "nodeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parentNode": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "childNodes": {
+            "$ref": "#/components/schemas/NodeList"
+          },
+          "firstChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "lastChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "previousSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "nextSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "ownerDocument": {
+            "$ref": "#/components/schemas/Document"
+          },
+          "namespaceURI": {
+            "type": "string"
+          },
+          "localName": {
+            "type": "string"
+          },
+          "baseURI": {
+            "type": "string"
+          },
+          "textContent": {
+            "type": "string"
+          }
+        }
+      },
+      "NamedNodeMap": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "namedItemNS": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "namedItem": {
+            "$ref": "#/components/schemas/Node"
+          }
+        }
+      },
+      "Node": {
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/NamedNodeMap"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "nodeName": {
+            "type": "string"
+          },
+          "nodeValue": {
+            "type": "string"
+          },
+          "nodeType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "parentNode": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "childNodes": {
+            "$ref": "#/components/schemas/NodeList"
+          },
+          "firstChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "lastChild": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "previousSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "nextSibling": {
+            "$ref": "#/components/schemas/Node"
+          },
+          "ownerDocument": {
+            "$ref": "#/components/schemas/Document"
+          },
+          "namespaceURI": {
+            "type": "string"
+          },
+          "localName": {
+            "type": "string"
+          },
+          "baseURI": {
+            "type": "string"
+          },
+          "textContent": {
+            "type": "string"
+          }
+        }
+      },
+      "NodeList": {
+        "type": "object",
+        "properties": {
+          "length": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RESTEndpoint": {
+        "type": "object",
+        "properties": {
+          "basePath": {
+            "type": "string"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "httpMethod": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "resourceXML": {
+            "$ref": "#/components/schemas/XMLConfiguration"
+          },
+          "permissionXML": {
+            "$ref": "#/components/schemas/XMLConfiguration"
+          }
+        }
+      },
+      "TypeInfo": {
+        "type": "object",
+        "properties": {
+          "typeName": {
+            "type": "string"
+          },
+          "typeNamespace": {
+            "type": "string"
+          }
+        }
+      },
+      "XMLConfiguration": {
+        "type": "object",
+        "properties": {
+          "updated": {
+            "type": "boolean"
+          },
+          "escapeValues": {
+            "type": "boolean"
+          },
+          "doc": {
+            "$ref": "#/components/schemas/Document"
+          },
+          "output": {
+            "type": "string",
+            "format": "binary"
+          },
+          "encoding": {
+            "type": "string"
+          },
+          "dtd": {
+            "type": "string"
+          },
+          "parent": {
+            "$ref": "#/components/schemas/Configuration"
+          },
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "inputStream": {
+            "type": "object"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "outputStream": {
+            "type": "object"
+          },
+          "namespaceAware": {
+            "type": "boolean"
+          },
+          "namespacePrefix": {
+            "type": "string"
+          },
+          "outputFile": {
+            "type": "string",
+            "format": "binary",
+            "writeOnly": true
+          },
+          "rootElement": {
+            "$ref": "#/components/schemas/Element"
+          }
+        }
+      },
+      "DocDocumentAttributes": {
+        "type": "object",
+        "properties": {
+          "attrId": {
+            "type": "string"
+          },
+          "attrValue": {
+            "type": "string"
+          },
+          "changedBy": {
+            "type": "string"
+          },
+          "changeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "docId": {
+            "type": "string"
+          },
+          "docSeq": {
+            "type": "number"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "DocDocuments": {
+        "type": "object",
+        "properties": {
+          "annexId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "certifyEvent": {
+            "type": "string"
+          },
+          "changeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "changedBy": {
+            "type": "string"
+          },
+          "claimId": {
+            "type": "number"
+          },
+          "claimObjSeq": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "docDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "docDays": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "docDescription": {
+            "type": "string"
+          },
+          "docHolderAddr": {
+            "type": "string"
+          },
+          "docHolderName": {
+            "type": "string"
+          },
+          "docId": {
+            "type": "string"
+          },
+          "docName": {
+            "type": "string"
+          },
+          "docNum": {
+            "type": "string"
+          },
+          "docSeq": {
+            "type": "number"
+          },
+          "docSerial": {
+            "type": "string"
+          },
+          "docState": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "docValidTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "documentRef": {
+            "type": "string"
+          },
+          "grcId": {
+            "type": "number"
+          },
+          "insuredId": {
+            "type": "number"
+          },
+          "manId": {
+            "type": "number"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "objectId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pholderId": {
+            "type": "number"
+          },
+          "policyId": {
+            "type": "number"
+          },
+          "providerId": {
+            "type": "number"
+          },
+          "receiveDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requestId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredFrom": {
+            "type": "string"
+          },
+          "requiredManId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "username": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocDocumentAttributes"
+            }
+          },
+          "cfgDocName": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "nestedErrors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          },
+          "hierarchyLevel": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PAddress": {
+        "required": [
+          "address",
+          "addressType"
+        ],
+        "type": "object",
+        "properties": {
+          "addressId": {
+            "type": "integer",
+            "description": "System generated identifier of the address",
+            "format": "int64"
+          },
+          "addressType": {
+            "type": "string",
+            "description": "Address type. Value is predefined and can be seen using service GET/common/lov/address-types"
+          },
+          "manId": {
+            "type": "number"
+          },
+          "address": {
+            "type": "string",
+            "description": "Full address. In some cases, address is set internally by concatenating address details"
+          },
+          "apartmentNumber": {
+            "type": "string"
+          },
+          "blockNumber": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "cityCode": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "countryState": {
+            "type": "string"
+          },
+          "entranceNumber": {
+            "type": "string"
+          },
+          "floorNumber": {
+            "type": "string"
+          },
+          "invoiceYn": {
+            "type": "string"
+          },
+          "mailYn": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "postCode": {
+            "type": "string"
+          },
+          "primaryFlag": {
+            "type": "string"
+          },
+          "quarterId": {
+            "type": "string"
+          },
+          "quarterName": {
+            "type": "string"
+          },
+          "regionName": {
+            "type": "string"
+          },
+          "stateName": {
+            "type": "string"
+          },
+          "stateRegion": {
+            "type": "string"
+          },
+          "streetId": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "streetNumber": {
+            "type": "string"
+          },
+          "territoryClassification": {
+            "type": "string"
+          },
+          "usageDateFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "usageDateTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "personPid": {
+            "$ref": "#/components/schemas/PersonPid"
+          }
+        }
+      },
+      "PBankAccount": {
+        "type": "object",
+        "properties": {
+          "accountCurrency": {
+            "type": "string"
+          },
+          "accountNum": {
+            "type": "string"
+          },
+          "accountState": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bankAccId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bankId": {
+            "type": "integer",
+            "description": "System bankId to which account belongs. Maps to bank_id from p_banks. If not known use the reference to PBanks pBanks",
+            "format": "int64"
+          },
+          "manId": {
+            "type": "number",
+            "description": "System manId of the person to whom the bank account belongs. If not known use the the reference PersonPid personPid"
+          },
+          "primaryFlag": {
+            "type": "string"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "personPid": {
+            "$ref": "#/components/schemas/PersonPid"
+          },
+          "pBanks": {
+            "$ref": "#/components/schemas/PBanks"
+          }
+        }
+      },
+      "PBanks": {
+        "type": "object",
+        "properties": {
+          "bankCode": {
+            "type": "string"
+          },
+          "bankId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "mainBankId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "manId": {
+            "type": "number"
+          },
+          "swiftCode": {
+            "type": "string"
+          },
+          "bankPid": {
+            "$ref": "#/components/schemas/PersonPid"
+          }
+        }
+      },
+      "PContactPersons": {
+        "type": "object",
+        "properties": {
+          "contactPersonId": {
+            "type": "number"
+          },
+          "manId": {
+            "type": "number"
+          },
+          "contactPersonName": {
+            "type": "string"
+          },
+          "note1": {
+            "type": "string"
+          },
+          "note2": {
+            "type": "string"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PContacts": {
+        "required": [
+          "contactType"
+        ],
+        "type": "object",
+        "properties": {
+          "contactId": {
+            "type": "integer",
+            "description": "System generated unique id of the contact record",
+            "format": "int64"
+          },
+          "contactType": {
+            "type": "string",
+            "description": "Contact type. Value is predefined and can be seen using service GET/common/lov/people-contact-types"
+          },
+          "details": {
+            "type": "string",
+            "description": "Contact detals"
+          },
+          "language": {
+            "type": "string"
+          },
+          "manId": {
+            "type": "number"
+          },
+          "note": {
+            "type": "string"
+          },
+          "primaryFlag": {
+            "type": "string",
+            "description": "Is this primary contact. Possible values: Y|N"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "personPid": {
+            "$ref": "#/components/schemas/PersonPid"
+          }
+        }
+      },
+      "PPeopleComplex": {
+        "required": [
+          "fname",
+          "gname",
+          "manComp"
+        ],
+        "type": "object",
+        "properties": {
+          "errorMessage": {
+            "$ref": "#/components/schemas/Error"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "manId": {
+            "type": "number",
+            "description": "System generated unique id of the person record"
+          },
+          "manComp": {
+            "type": "integer",
+            "description": "Identifies whether person is individual or company. Possible values are:\n1- Person\n2- Company",
+            "format": "int32"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "egn": {
+            "type": "string",
+            "description": "Unique personal identifier for individuals or BULSTAT Unified Identification Code/Number (UIC) for companies"
+          },
+          "name": {
+            "type": "string",
+            "description": "In case of company/legal entity holds the full name of the entity. Required in case of legal entity"
+          },
+          "gname": {
+            "type": "string",
+            "description": "Given (first) name of individual"
+          },
+          "sname": {
+            "type": "string",
+            "description": "Surname (middle) name of individual"
+          },
+          "fname": {
+            "type": "string",
+            "description": "Family (last) name of individual"
+          },
+          "sex": {
+            "type": "integer",
+            "description": "Required in case of physical person. Gender:\n1  Male\n2  Female",
+            "format": "int32"
+          },
+          "namePrefix": {
+            "type": "string"
+          },
+          "nameSuffix": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "homeCountry": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "classCode": {
+            "type": "string"
+          },
+          "classSubCode": {
+            "type": "string"
+          },
+          "compType": {
+            "type": "string"
+          },
+          "dataSource": {
+            "type": "string"
+          },
+          "fiscalPeriod": {
+            "type": "number"
+          },
+          "industryCode": {
+            "type": "string"
+          },
+          "subIndustryCode": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attr1": {
+            "type": "string"
+          },
+          "attr2": {
+            "type": "string"
+          },
+          "attr3": {
+            "type": "string"
+          },
+          "attr4": {
+            "type": "string"
+          },
+          "attr5": {
+            "type": "string"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocDocuments"
+            }
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PAddress"
+            }
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PContacts"
+            }
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuestQuestions"
+            }
+          },
+          "peopleGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PPeopleGroups"
+            }
+          },
+          "contactPersons": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PContactPersons"
+            }
+          },
+          "relations1": {
+            "type": "array",
+            "description": "The manId of the current person will be set automatically to part1Id",
+            "items": {
+              "$ref": "#/components/schemas/PPeopleRelation"
+            }
+          },
+          "relations2": {
+            "type": "array",
+            "description": "The manId of the current person will be set automatically to part2Id",
+            "items": {
+              "$ref": "#/components/schemas/PPeopleRelation"
+            }
+          },
+          "bankAccounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PBankAccount"
+            }
+          }
+        }
+      },
+      "PPeopleGroups": {
+        "type": "object",
+        "properties": {
+          "fromDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "groupCode": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "manId": {
+            "type": "number"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PPeopleRelation": {
+        "type": "object",
+        "properties": {
+          "part1Id": {
+            "type": "number"
+          },
+          "part2Id": {
+            "type": "number"
+          },
+          "relId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validTo": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "The manId of the current person will be set automatically to part2Id"
+      },
+      "PersonPid": {
+        "type": "object",
+        "properties": {
+          "egn": {
+            "type": "string"
+          },
+          "manComp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "Entity used when person must be searched. Entity is referenced from structures with manId."
+      },
+      "QuestQuestions": {
+        "type": "object",
+        "properties": {
+          "annexId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "changedBy": {
+            "type": "string"
+          },
+          "changeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "claimId": {
+            "type": "number"
+          },
+          "claimObjSeq": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "grcId": {
+            "type": "number"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "insuredId": {
+            "type": "number"
+          },
+          "manId": {
+            "type": "number"
+          },
+          "objectId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "pholderId": {
+            "type": "number"
+          },
+          "policyId": {
+            "type": "number"
+          },
+          "questAnswer": {
+            "type": "string"
+          },
+          "questId": {
+            "type": "string"
+          },
+          "questOrder": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "questWeight": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requestId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "PPeople": {
+        "required": [
+          "fname",
+          "gname",
+          "manComp"
+        ],
+        "type": "object",
+        "properties": {
+          "errorMessage": {
+            "$ref": "#/components/schemas/Error"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "manId": {
+            "type": "number",
+            "description": "System generated unique id of the person record"
+          },
+          "manComp": {
+            "type": "integer",
+            "description": "Identifies whether person is individual or company. Possible values are:\n1- Person\n2- Company",
+            "format": "int32"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "egn": {
+            "type": "string",
+            "description": "Unique personal identifier for individuals or BULSTAT Unified Identification Code/Number (UIC) for companies"
+          },
+          "name": {
+            "type": "string",
+            "description": "In case of company/legal entity holds the full name of the entity. Required in case of legal entity"
+          },
+          "gname": {
+            "type": "string",
+            "description": "Given (first) name of individual"
+          },
+          "sname": {
+            "type": "string",
+            "description": "Surname (middle) name of individual"
+          },
+          "fname": {
+            "type": "string",
+            "description": "Family (last) name of individual"
+          },
+          "sex": {
+            "type": "integer",
+            "description": "Required in case of physical person. Gender:\n1  Male\n2  Female",
+            "format": "int32"
+          },
+          "namePrefix": {
+            "type": "string"
+          },
+          "nameSuffix": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "homeCountry": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "classCode": {
+            "type": "string"
+          },
+          "classSubCode": {
+            "type": "string"
+          },
+          "compType": {
+            "type": "string"
+          },
+          "dataSource": {
+            "type": "string"
+          },
+          "fiscalPeriod": {
+            "type": "number"
+          },
+          "industryCode": {
+            "type": "string"
+          },
+          "subIndustryCode": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attr1": {
+            "type": "string"
+          },
+          "attr2": {
+            "type": "string"
+          },
+          "attr3": {
+            "type": "string"
+          },
+          "attr4": {
+            "type": "string"
+          },
+          "attr5": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginatedQueryRs": {
+        "required": [
+          "rowSet"
+        ],
+        "type": "object",
+        "properties": {
+          "totalRowCount": {
+            "type": "integer",
+            "description": "The total number of rows in the result set. This field will be populated only on the first call to the query, when it is executed against the database.",
+            "format": "int32"
+          },
+          "resultSetId": {
+            "type": "string",
+            "description": "ID of cached result set from which to read rows in consequentive calls."
+          },
+          "rowSet": {
+            "$ref": "#/components/schemas/QueryRowSet"
+          }
+        },
+        "xml": {
+          "name": "PaginatedQueryRs"
+        }
+      },
+      "QueryColumn": {
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Column data"
+          },
+          "name": {
+            "type": "string",
+            "description": "Column name",
+            "xml": {
+              "attribute": true
+            }
+          },
+          "type": {
+            "type": "string",
+            "description": "The generic data type of the column:\n-\tT - text\n-\tN - number\n-\tD - date\nIn case the data type is date, the value will be formatted as ISO Date Format - yyyy-MM-dd'T'HH:mm:ss",
+            "xml": {
+              "attribute": true
+            }
+          }
+        },
+        "description": "Column from query execution result set.",
+        "xml": {
+          "name": "QueryColumn"
+        }
+      },
+      "QueryRow": {
+        "required": [
+          "column"
+        ],
+        "type": "object",
+        "properties": {
+          "column": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryColumn"
+            }
+          }
+        },
+        "xml": {
+          "name": "QueryRow"
+        }
+      },
+      "QueryRowSet": {
+        "type": "object",
+        "properties": {
+          "row": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryRow"
+            }
+          },
+          "object": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "description": "Collection of result set rows returned by the service."
+      },
+      "SearchPeople": {
+        "type": "object",
+        "properties": {
+          "manId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "pid": {
+            "type": "string"
+          },
+          "primaryPhone": {
+            "type": "string"
+          },
+          "primaryEmail": {
+            "type": "string"
+          },
+          "manComp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gname": {
+            "type": "string"
+          },
+          "sname": {
+            "type": "string"
+          },
+          "fname": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "nationality": {
+            "type": "string"
+          },
+          "compType": {
+            "type": "string"
+          },
+          "nameSuffix": {
+            "type": "string"
+          },
+          "namePrefix": {
+            "type": "string"
+          },
+          "dataSource": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "homeCountry": {
+            "type": "string"
+          },
+          "registrationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "industryCode": {
+            "type": "string"
+          },
+          "subIndustryCode": {
+            "type": "string"
+          },
+          "fiscalPeriod": {
+            "type": "number"
+          },
+          "classCode": {
+            "type": "string"
+          },
+          "classSubCode": {
+            "type": "string"
+          },
+          "attr1": {
+            "type": "string"
+          },
+          "attr2": {
+            "type": "string"
+          },
+          "attr3": {
+            "type": "string"
+          },
+          "attr4": {
+            "type": "string"
+          },
+          "attr5": {
+            "type": "string"
+          }
+        },
+        "description": "Entity class conatining people/company data and their primary phone and e-mail"
+      }
+    }
+  }
+}
